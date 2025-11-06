@@ -32,16 +32,16 @@ fun main() {
 //
 ////    For Loop
 //
-//for (i in 0 .. 10 step 2){
+//for (i in 0 .. 10 step 2){     -- this range i.e .. also includes end value
 //    print(i)
 //
 //}
-//    for (i in 0 until 10 step 2){
+//    for (i in 0 until 10 step 2){    -- until do not includes end value
 //        print(i)
 //
 //    }
 //
-//    for (i in 10 downTo 0){
+//    for (i in 10 downTo 0){      -- downto also includes all number from 10 to 0
 //        print(i)
 //    }
 
