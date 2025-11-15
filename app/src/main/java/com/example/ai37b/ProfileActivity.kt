@@ -56,7 +56,8 @@ fun ProfileBody(){
     Scaffold {padding ->
         Column(modifier = Modifier.fillMaxSize()
             .padding(padding)) {
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(modifier = Modifier
+                .padding(start = 12.dp).fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
                 ) {
