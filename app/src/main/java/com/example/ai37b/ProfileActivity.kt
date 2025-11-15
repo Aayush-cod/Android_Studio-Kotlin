@@ -57,7 +57,7 @@ fun ProfileBody(){
         Column(modifier = Modifier.fillMaxSize()
             .padding(padding)) {
             Row(modifier = Modifier
-                .padding(start = 12.dp).fillMaxWidth(),
+                .padding(start = 12.dp, end = 8.dp).fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
                 ) {
