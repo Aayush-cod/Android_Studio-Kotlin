@@ -36,8 +36,11 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.ai37b.ui.theme.AI37BTheme
 
 class ProfileActivity : ComponentActivity() {
@@ -46,16 +49,18 @@ class ProfileActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProfileBody()
+            SpotifyProfile()
         }
     }
 }
 
-
+@Preview
 @Composable
 fun ProfileBody(){
     Scaffold {padding ->
         Column(modifier = Modifier.fillMaxSize()
-            .padding(padding)) {
+            .padding(padding).
+        background(color = Color.White)) {
             Row(modifier = Modifier
                 .padding(start = 12.dp, end = 8.dp).fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -326,8 +331,197 @@ fun ProfileBody(){
     }
 }
 
+
+@Composable
+fun SpotifyProfile(){
+    Scaffold {padding->
+        Column(modifier = Modifier.fillMaxSize()
+            .background(color = Color.Black)
+        ) {
+            Row() {
+                Row(
+                    modifier = Modifier.weight(2f)
+                        .padding(top = 40.dp, start = 30.dp)
+                ) {
+                    Text(
+                        "Recently played",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(
+                        modifier = Modifier.weight(1f)
+                            .padding(start = 4.dp, end = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            16.dp,
+                            Alignment.End
+                        ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_notifications_24),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.outline_refresh_24),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.outline_settings_24),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+
+                    }
+                }
+            }
+            Row(modifier = Modifier.padding(top = 20.dp)
+                .fillMaxWidth()) {
+                Column(modifier = Modifier.padding(start = 30.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.lana),
+                        contentDescription = null,
+                        modifier = Modifier.size(90.dp)
+                            .clip(shape = CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Text("Lana Del Rey",
+                        modifier = Modifier.padding(start = 20.dp, top = 6.dp),
+                        color = Color.White)
+                }
+
+                Column(modifier = Modifier.padding(start = 30.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.marvin),
+                        contentDescription = null,
+                        modifier = Modifier.size(90.dp)
+                            .clip(shape = CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Text("Marvin Gaye",
+                        modifier = Modifier.padding(start = 20.dp, top = 6.dp),
+                        color = Color.White)
+                }
+
+
+            }
+
+            Row(modifier = Modifier.padding(top = 20.dp)
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(R.drawable.daily),
+                    contentDescription = null,
+                    modifier = Modifier.size(90.dp)
+                        .padding(start = 30.dp)
+
+                )
+
+                Column(modifier = Modifier.padding(start = 20.dp)) {
+                    Text("#SPOTIFYWRAPPED",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Light)
+                    Text("Your 2021 in review",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Row(modifier = Modifier.padding(top = 20.dp)
+                .fillMaxWidth()) {
+                Column(modifier = Modifier.padding(start = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(R.drawable.daily),
+                        contentDescription = null,
+                        modifier = Modifier.size(130.dp)
+                            .fillMaxSize()
+
+                    )
+                    Text("Your Top Songs 2021",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp),
+                        color = Color.White)
+                }
+
+                Column(modifier = Modifier.padding(start = 30.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.daily),
+                        contentDescription = null,
+                        modifier = Modifier.size(130.dp)
+
+                    )
+                    Text("Your Artists Revealed",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp),
+                        color = Color.White)
+                }
+
+
+            }
+
+            Row(modifier = Modifier.padding(start = 30.dp, top = 20.dp)
+                .fillMaxWidth()) {
+                Text("Editor's picks",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Row(modifier = Modifier.padding(top = 20.dp)
+                .fillMaxWidth()) {
+                Column(modifier = Modifier.padding(start = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(R.drawable.najeek),
+                        contentDescription = null,
+                        modifier = Modifier.size(130.dp)
+                            .fillMaxSize()
+
+                    )
+                    Text("Bartika Em Rai,",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp)
+                            .align (Alignment.Start ),
+                        color = Color.White,
+                       )
+
+                    Text("Tribal Rain, Billie Eilish ",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp)
+                            ,
+                        color = Color.White)
+                }
+
+                Column(modifier = Modifier.padding(start = 30.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.ranga),
+                        contentDescription = null,
+                        modifier = Modifier.size(130.dp)
+
+                    )
+                    Text("Ranga,",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp),
+                        color = Color.White)
+
+                    Text("Sajan raj vaidya, Taral",
+                        modifier = Modifier.padding(start = 2.dp, top = 6.dp),
+                        color = Color.White)
+                }
+
+
+            }
+
+        }
+    }
+}
+
+
 @Preview
 @Composable
 fun PreviewProfile(){
     ProfileBody()
+    SpotifyProfile()
 }
