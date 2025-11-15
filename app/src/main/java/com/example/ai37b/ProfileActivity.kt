@@ -480,6 +480,7 @@ fun SpotifyProfile(){
                         painter = painterResource(R.drawable.najeek),
                         contentDescription = null,
                         modifier = Modifier.size(130.dp)
+                            .align (Alignment.Start)
                             .fillMaxSize()
 
                     )
@@ -500,6 +501,7 @@ fun SpotifyProfile(){
                         painter = painterResource(R.drawable.ranga),
                         contentDescription = null,
                         modifier = Modifier.size(130.dp)
+                            .align (Alignment.Start)
 
                     )
                     Text("Ranga,",
