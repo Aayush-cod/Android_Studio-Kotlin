@@ -152,12 +152,13 @@ fun ProfileBody(){
 
                 },
                     modifier = Modifier.padding(start = 18.dp)
+
                     ,
                     shape = RoundedCornerShape(6.dp),
                     border = BorderStroke(2.dp, color = Color.LightGray),
                     colors = ButtonDefaults.buttonColors(
-                        contentColor = Color.Black,
-                        containerColor = Color.White
+                        contentColor = Color.White,
+                        containerColor = Color.Blue
                     )
 
                 ) {
