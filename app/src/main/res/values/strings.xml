@@ -6,4 +6,6 @@
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="title_activity_dashboard_two">DashboardTwoActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_home_screen">HomeScreenActivity</string>
+    <string name="title_activity_admin_dashboard">AdminDashboardActivity</string>
 </resources>

@@ -1,16 +1,27 @@
 package com.example.ai37b.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.ai37b.model.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AuthViewModel: ViewModel() {
+
+
 
     private val auth = Firebase.auth
 
     private val firestore = Firebase.firestore
+
+
+
 
     fun login(email : String, password: String, onResult: (Boolean, String?) -> Unit){
         auth.signInWithEmailAndPassword(email, password)
