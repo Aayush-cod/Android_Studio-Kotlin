@@ -12,6 +12,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AI37B">
         <activity
+            android:name=".ProductActivity"
+            android:exported="true"
+            android:label="@string/title_activity_product"
+            android:theme="@style/Theme.AI37B">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AdminDashboardActivityy"
+            android:exported="true"
+            android:label="@string/title_activity_admin_dashboard_activityy"
+            android:theme="@style/Theme.AI37B">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true"
+            android:label="@string/title_activity_forgot_password"
+            android:theme="@style/Theme.AI37B">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".AdminDashboardActivity"
             android:exported="true"
             android:label="@string/title_activity_admin_dashboard"

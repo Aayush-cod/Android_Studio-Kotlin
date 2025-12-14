@@ -1,7 +1,7 @@
 package com.example.ai37b.model
 
 data class ProductModel(
-    val productId : String,
+    var productId : String,
     val productName : String,
     val dom : String = "",
 ){

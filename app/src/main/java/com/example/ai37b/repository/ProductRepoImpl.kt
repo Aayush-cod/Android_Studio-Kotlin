@@ -18,6 +18,7 @@ class ProductRepoImpl : ProductRepo {
         callback: (Boolean, String) -> Unit
     ) {
         val id = ref.push().key.toString()
+        model.productId= id
 
         ref.child(id).setValue(model)
             .addOnCompleteListener {
@@ -31,11 +32,11 @@ class ProductRepoImpl : ProductRepo {
     }
 
     override fun editProduct(
-        userId: String,
+        productId : String,
         model: ProductModel,
         callback: (Boolean, String) -> Unit
     ) {
-        ref.child(userId).updateChildren(model.toMap())
+        ref.child(productId).updateChildren(model.toMap())
             .addOnCompleteListener {
                 if (it.isSuccessful){
                     callback(true, "Product deleted")
@@ -47,10 +48,10 @@ class ProductRepoImpl : ProductRepo {
     }
 
     override fun deleteProduct(
-        userId: String,
+        productId : String,
         callback: (Boolean, String) -> Unit
     ) {
-        ref.child(userId).removeValue()
+        ref.child(productId).removeValue()
             .addOnCompleteListener {
                 if (it.isSuccessful){
                     callback(true, "Product deleted")
@@ -61,11 +62,11 @@ class ProductRepoImpl : ProductRepo {
     }
 
     override fun getProductById(
-        userId: String,
-        model: ProductModel,
+        productId: String,
+
         callback: (Boolean, String, ProductModel?) -> Unit
     ) {
-        ref.child(userId).addValueEventListener(object : ValueEventListener{
+        ref.child(productId).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                if (snapshot.exists()){
 

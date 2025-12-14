@@ -22,8 +22,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -68,13 +70,12 @@ import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.ViewModel
 import com.example.ai37b.ui.theme.AI37BTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-
-
+import com.example.ai37b.model.UserModel
+import com.example.ai37b.repository.UserRepoImpl
 
 
 import com.example.ai37b.ui.theme.PurpleGrey80
-import com.example.ai37b.viewmodel.AuthViewModel
+import com.example.ai37b.viewmodel.UserViewModel
 
 
 class RegistrationActivity : ComponentActivity() {
@@ -89,7 +90,13 @@ class RegistrationActivity : ComponentActivity() {
 
 @Composable
 fun RegisterBody(){
+
+    val userViewModel = remember { UserViewModel(UserRepoImpl()) }
+
     var email by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
     var terms by remember { mutableStateOf(false) }
@@ -133,6 +140,7 @@ fun RegisterBody(){
                 .fillMaxSize()
                 .padding(padding)
                 .background(Color.White)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
@@ -207,6 +215,77 @@ fun RegisterBody(){
                 shape = RoundedCornerShape(15.dp),
                 placeholder = {
                     Text("abc@gmail.com")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = PurpleGrey80,
+                    unfocusedContainerColor = PurpleGrey80,
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+
+            )
+            OutlinedTextField(
+                value = firstName,
+                onValueChange = { data ->
+                    firstName = data
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                shape = RoundedCornerShape(15.dp),
+                placeholder = {
+                    Text("firstName")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = PurpleGrey80,
+                    unfocusedContainerColor = PurpleGrey80,
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+
+            )
+
+            OutlinedTextField(
+                value = lastName,
+                onValueChange = { data ->
+                    lastName = data
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                shape = RoundedCornerShape(15.dp),
+                placeholder = {
+                    Text("lastName")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = PurpleGrey80,
+                    unfocusedContainerColor = PurpleGrey80,
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+
+            )
+
+            OutlinedTextField(
+                value = gender,
+                onValueChange = { data ->
+                    gender = data
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                shape = RoundedCornerShape(15.dp),
+                placeholder = {
+                    Text("gender")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
@@ -305,21 +384,44 @@ fun RegisterBody(){
 
             Button(
                 onClick = {
-                    if (!terms){
-                        Toast.makeText(context,"Please agree to terms and conditions!",
-                            Toast.LENGTH_SHORT).show()
 
-                    }else{
+                    userViewModel.register(email, password ){
+                        success,message, userId ->
+                        if(success){
 
-                        editor.putString("email", email)
-                        editor.putString("password", password )
-                        editor.putString("date", selectedDate)
+                            var model = UserModel(
+                                userId = userId,
+                                firstName = firstName,
+                                lastName = lastName,
+                                email = email,
+                                gender = gender,
+                                dob = selectedDate
 
-                        editor.apply()
-                        Toast.makeText(context, "Sing up success",
-                            Toast.LENGTH_SHORT).show()
-                        activity.finish()
+                            )
+
+                            userViewModel.addUserToDatabase(userId, model  ){
+                                success, message ->
+                                if (success){
+
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                        .show()
+
+                                    activity.finish()
+
+
+
+                                }else{
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+
+                        }else{
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
+
 
                 },
                 enabled = !isLoading,

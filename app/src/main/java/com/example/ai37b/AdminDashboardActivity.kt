@@ -55,7 +55,6 @@ import com.example.ai37b.ui.theme.AccentLinkGreen
 import com.example.ai37b.ui.theme.AccentRed
 import com.example.ai37b.ui.theme.BackgroundLightGray
 import com.example.ai37b.ui.theme.PrimaryGreen
-import com.example.ai37b.viewmodel.AuthViewModel
 
 class AdminDashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
