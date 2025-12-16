@@ -1,5 +1,6 @@
 package com.example.ai37b.repository
 
+import android.util.Log
 import com.example.ai37b.model.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +23,13 @@ class UserRepoImpl : UserRepo {
         password: String,
         callback: (Boolean, String) -> Unit
     ) {
+
+        if (email.isBlank() || password.isBlank()) {
+            // Handle the error gracefully without crashing
+            // e.g., throw custom exception, log a warning, or show a user message.
+            Log.e("UserRepoImpl", "Email or password is blank/empty.")
+            return // Exit the function to prevent the crash
+        }
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {

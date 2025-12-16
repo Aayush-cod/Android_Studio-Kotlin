@@ -36,7 +36,7 @@ class ProductViewModel(val prepo : ProductRepo) : ViewModel() {
 
 
 
-    fun getProductById(productId: String, model: ProductModel, callback: (Boolean, String, ProductModel?) -> Unit){
+    fun getProductById(productId: String){
 
         _loading.postValue(true)
         prepo.getProductById(productId){
@@ -50,7 +50,7 @@ class ProductViewModel(val prepo : ProductRepo) : ViewModel() {
         }
     }
 
-    fun getAllProduct(callback: (Boolean, String, List<ProductModel>) -> Unit){
+    fun getAllProduct(){
         _loading.postValue(true)
         prepo.getAllProduct{
             success, message, data ->

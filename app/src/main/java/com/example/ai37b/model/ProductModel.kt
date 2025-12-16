@@ -1,9 +1,9 @@
 package com.example.ai37b.model
 
 data class ProductModel(
-    var productId : String,
-    val productName : String,
-    val dom : String = "",
+    var productId : String = "",
+    var productName : String = "",
+    var dom : String = "",
 ){
     fun toMap(): Map<String, Any?>{
 
