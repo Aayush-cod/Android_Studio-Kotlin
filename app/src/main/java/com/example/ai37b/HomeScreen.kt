@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ai37b.model.ProductModel
 import com.example.ai37b.repository.ProductRepoImpl
 import com.example.ai37b.ui.theme.BgColor
 import com.example.ai37b.ui.theme.Blue
@@ -70,11 +71,13 @@ fun HomeScreen(){
 
     val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
 
-    LaunchedEffect(Unit) {
-        productViewModel.getAllProduct()
-    }
+
+    val product = productViewModel.product.observeAsState(initial =null)
+
 
     val products = productViewModel.allProducts.observeAsState(initial = emptyList())
+
+
 
     val context = LocalContext.current
 
@@ -87,6 +90,18 @@ fun HomeScreen(){
     var name by remember { mutableStateOf("") }
 
     var dom by remember { mutableStateOf("") }
+
+
+    LaunchedEffect(product.value) {
+        productViewModel.getAllProduct()
+
+//        if (data.value != null){}
+        product.value?.let {
+                product ->
+            name = product.productName
+            dom = product.dom
+        }
+    }
 
 
 
@@ -151,6 +166,7 @@ fun HomeScreen(){
 
                     IconButton(onClick = {
                         editDialog = true
+                        productViewModel.getProductById(data.productId)
                     }) {
                         Icon(
                             Icons.Default.Edit,
@@ -195,7 +211,7 @@ fun HomeScreen(){
                                             Toast.makeText(context, message, Toast.LENGTH_SHORT)
                                                 .show()
 
-                                            activity.finish()
+
 
                                         } else {
                                             Toast.makeText(context, message, Toast.LENGTH_SHORT)
@@ -258,6 +274,21 @@ fun HomeScreen(){
                             confirmButton = {
                                 TextButton(onClick = {
                                     editDialog = false
+
+                                    var pmodel = ProductModel(
+                                       product.value!!.productId
+                                        ,name,
+                                        dom
+                                    )
+                                    productViewModel.editProduct(pmodel){success, message ->
+                                        if (success){
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+
+                                        }else{
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                                 }) {
                                     Text("Edit")
                                 }

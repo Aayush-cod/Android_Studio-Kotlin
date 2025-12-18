@@ -12,8 +12,8 @@ class ProductViewModel(val prepo : ProductRepo) : ViewModel() {
     }
 
 
-    fun editProduct(productId : String, model : ProductModel, callback: (Boolean, String) -> Unit){
-        prepo.editProduct(productId, model, callback)
+    fun editProduct( model : ProductModel, callback: (Boolean, String) -> Unit){
+        prepo.editProduct( model, callback)
     }
 
     fun deleteProduct(productId : String, callback: (Boolean, String) -> Unit){
