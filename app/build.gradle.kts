@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.room.common.jvm)
     implementation(libs.firebase.database)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,5 +68,15 @@ dependencies {
 //    dependencies of observeasstate
 
         implementation("androidx.compose.runtime:runtime-livedata:1.10.0")
+
+//    Cloudinary to store image and picasso to fetch image
+
+    implementation("com.cloudinary:cloudinary-android:2.1.0")
+    implementation("com.squareup.picasso:picasso:2.8")
+//Coil instaed of picasso
+    // Change from 3.3.0 to 3.2.0 or 3.0.0
+    // Coil 2.x includes the network engine by default
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
 
 }

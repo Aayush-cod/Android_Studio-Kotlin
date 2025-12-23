@@ -2,10 +2,16 @@ package com.example.ai37b
 
 
 import android.app.Activity
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,15 +56,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.ai37b.model.ProductModel
+import com.example.ai37b.repository.CommonRepoImpl
 import com.example.ai37b.repository.ProductRepoImpl
 import com.example.ai37b.ui.theme.BgColor
 import com.example.ai37b.ui.theme.Blue
 import com.example.ai37b.ui.theme.CardBGColor
 import com.example.ai37b.ui.theme.White
+import com.example.ai37b.viewmodel.CommonViewModel
 import com.example.ai37b.viewmodel.ProductViewModel
 
 
@@ -72,16 +82,31 @@ fun HomeScreen(){
     val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
 
 
-    val product = productViewModel.product.observeAsState(initial =null)
+//    val product = productViewModel.product.observeAsState(initial =null)
 
 
     val products = productViewModel.allProducts.observeAsState(initial = emptyList())
+
+    // Keep track of which product we are currently editing
+    var selectedProduct by remember { mutableStateOf<ProductModel?>(null) }
 
 
 
     val context = LocalContext.current
 
     val activity = context as Activity
+
+    // Image Picking Logic
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val commonViewModel = remember { CommonViewModel(CommonRepoImpl()) }
+
+// Initialize your ImageUtils (make sure it's accessible or passed from Activity)
+// For this example, let's assume you trigger a standard picker
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+    }
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -91,16 +116,19 @@ fun HomeScreen(){
 
     var dom by remember { mutableStateOf("") }
 
+    var imageUrl by remember { mutableStateOf("") }
 
-    LaunchedEffect(product.value) {
+//product.value
+    LaunchedEffect(Unit) {
         productViewModel.getAllProduct()
 
 //        if (data.value != null){}
-        product.value?.let {
-                product ->
-            name = product.productName
-            dom = product.dom
-        }
+//        product.value?.let {
+//                product ->
+//            name = product.productName
+//            dom = product.dom
+//            imageUrl = product.imageUrl
+//        }
     }
 
 
@@ -165,8 +193,13 @@ fun HomeScreen(){
 
 
                     IconButton(onClick = {
+
+                        selectedProduct = data // Store the whole product object
+                        name = data.productName
+                        dom = data.dom
+                        imageUrl = data.imageUrl
+                        selectedImageUri = null // Reset the picker
                         editDialog = true
-                        productViewModel.getProductById(data.productId)
                     }) {
                         Icon(
                             Icons.Default.Edit,
@@ -180,7 +213,12 @@ fun HomeScreen(){
 
                     IconButton(onClick = {
 
+                        selectedProduct = data // Store the whole product object
+
                         showDialog = true
+
+
+
 
 
                     }) {
@@ -190,119 +228,8 @@ fun HomeScreen(){
                         )
                     }
 
-                    if (showDialog){
-                        AlertDialog(
-                            onDismissRequest = {
-                                showDialog = false
-                            },
-                            title =  {Text("Delete product")},
-                            text = {Text("Are you sure want to delete product?")},
-                            confirmButton = {
-                                TextButton(onClick ={
-                                showDialog = false
-
-                                    var id = data.productId
 
 
-
-                                    productViewModel.deleteProduct(id) { success, message ->
-                                        if (success) {
-
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                                .show()
-
-
-
-                                        } else {
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                                .show()
-
-                                        }
-                                    }}
-                                ) {
-                                    Text("Delete")
-                                }
-
-
-                            },
-                            dismissButton = {
-                                TextButton(onClick = {
-                                    showDialog = false
-                                }) {
-                                    Text("Cancel")
-                                }
-                            }
-
-                        )
-                    }
-
-
-                    if (editDialog){
-                        AlertDialog(
-                            onDismissRequest = {
-                                editDialog = false
-                            },
-                            title = {
-                                Text("Edit Product profile")
-                            },
-                            text = {
-                                Column() {
-                                    Text(
-                                        "Edit Product: ${data.productName}",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 18.sp,
-                                        modifier = Modifier.padding(bottom = 16.dp)
-                                    )
-
-                                    OutlinedTextField(
-                                        value = name,
-                                        onValueChange = { name = it },
-                                        label = { Text("Product Name") },
-                                        shape = RoundedCornerShape(8.dp),
-                                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                                    )
-
-                                    OutlinedTextField(
-                                        value = dom,
-                                        onValueChange = { dom = it },
-                                        label = { Text("Date of Manufacture") },
-                                        shape = RoundedCornerShape(8.dp),
-                                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                                    )
-                                }
-                            },
-                            confirmButton = {
-                                TextButton(onClick = {
-                                    editDialog = false
-
-                                    var pmodel = ProductModel(
-                                       product.value!!.productId
-                                        ,name,
-                                        dom
-                                    )
-                                    productViewModel.editProduct(pmodel){success, message ->
-                                        if (success){
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-
-
-                                        }else{
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }) {
-                                    Text("Edit")
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = {
-                                    editDialog = false
-                                }) {
-                                    Text("Cancel")
-                                }
-                            }
-
-                        )
-                    }
                 }
 
 
@@ -483,6 +410,122 @@ fun HomeScreen(){
 //            Spacer(modifier = Modifier.height(24.dp))
 //        }
     }
+
+    if (editDialog && selectedProduct != null) {
+        AlertDialog(
+            onDismissRequest = { editDialog = false },
+            title = { Text("Edit Product profile") },
+            text = {
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .clickable { launcher.launch("image/*") }
+                    ) {
+                        AsyncImage(
+                            model = selectedImageUri ?: imageUrl, // Uri for local pick, String for Cloudinary URL
+                            contentDescription = "Product Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(R.drawable.google)
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text("Product Name") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = dom,
+                        onValueChange = { dom = it },
+                        label = { Text("Date of Manufacture") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    // Use the ID from our 'selectedProduct' state
+                    val currentId = selectedProduct!!.productId
+
+                    if (selectedImageUri != null) {
+                        commonViewModel.uploadImage(context, selectedImageUri!!) { newUrl ->
+                            val model = ProductModel(currentId,
+                                name,
+                                dom,
+                                newUrl ?: imageUrl)
+                            productViewModel.editProduct(model) { success, message ->
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                if (success) editDialog = false
+                            }
+                        }
+                    } else {
+                        val model = ProductModel(currentId, name, dom, imageUrl)
+                        productViewModel.editProduct(model) { success, message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            if (success) editDialog = false
+                        }
+                    }
+                }) { Text("Update") }
+            },
+            dismissButton = {
+                TextButton(onClick = { editDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
+
+    if (showDialog&& selectedProduct != null){
+        AlertDialog(
+            onDismissRequest = {
+                showDialog = false
+            },
+            title =  {Text("Delete product")},
+            text = {Text("Are you sure want to delete product?")},
+            confirmButton = {
+                TextButton(onClick ={
+                    showDialog = false
+
+                    val currentId = selectedProduct!!.productId
+
+
+
+
+
+                    productViewModel.deleteProduct(currentId) { success, message ->
+                        if (success) {
+
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                .show()
+
+
+
+                        } else {
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                .show()
+
+                        }
+                    }}
+                ) {
+                    Text("Delete")
+                }
+
+
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                }) {
+                    Text("Cancel")
+                }
+            }
+
+        )
+    }
+
 
 
 }
